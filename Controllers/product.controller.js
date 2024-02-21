@@ -123,5 +123,27 @@ const updateProduct = async (req, res) => {
         })
     }
 }
-
+const deleteProduct = async (req, res) => {
+    const { id } = req.params;
+    try {
+        let deletedProduct = await Products.findByIdAndDelete(id);
+        if (!deletedProduct) {
+            res.status(404).send({
+                statusCode: 404,
+                message: "The specified resource could not be found."
+            })
+        } else {
+            res.status(200).send({
+                statusCode: 200,
+                message: "Product deleted successfully."
+            })
+        }
+    } catch (error) {
+        consolelog("Error while deleting product", error);
+        res.status(500).send({
+            statusCode: 500,
+            message: "Something went wrong deleting the product"
+        })
+    }
+}
 module.exports = { createProduct, getAllProducts, getProductByHandle, updateProduct }
