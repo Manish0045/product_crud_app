@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { createProduct, getAllProducts, getProductByHandle, updateProduct } = require("../Controllers/product.controller");
+const { createProduct, getAllProducts, getProductByHandle, updateProduct, deleteProduct } = require("../Controllers/product.controller");
 
 router
     .get('/products', getAllProducts)
@@ -8,6 +8,6 @@ router
     .post('/add', createProduct)
     .post('/addProducts', (req, res) => { })
     .put('/update/:productId', updateProduct)
-    .delete('/delete/:productId', (req, res) => { })
+    .delete('/delete/:productId', deleteProduct)
 
 module.exports = router;
