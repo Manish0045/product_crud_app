@@ -12,14 +12,14 @@ const createProduct = async (req, res) => {
         if (!category) {
             return res.status(404).json({ msg: "Category not found." });
         }
-        const existingProduct = await Product.findOne({ name });
+        const existingProduct = await Product.findOne({ $and: [{ name }, { categoryId }] });
         if (existingProduct) {
             return res.status(401).json({
                 statusCode: 401,
                 message: "Product already exists"
             })
         }
-        const product = await Product.create({ name, categoryId, price, description, slug: existingProduct.slug ? name.split(' ').join("-") + "-" + (i + 1) : name.split(' ').join("-") + i + 1 });
+        const product = await Product.create({ name, categoryId, price, description, slug: name.split(' ').join("-") });
         if (product) {
             return res.status(200).json({ statusCode: 201, message: "Product created", productId: product._id });
         } else {
