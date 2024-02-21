@@ -90,13 +90,30 @@ const updateProduct = async (req, res) => {
                 message: "No product found with provided id"
             })
         }
-        const updatedProduct = await Product.findByIdAndUpdate(_id = productId, { name: name, description: description, price: price }).selected("-description -slug");
-        if (updatedProduct) {
+        else {
+            // Update the fields of the existing product
+            existingProduct.name = name || existingProduct.name;
+            existingProduct.price = price || existingProduct.price;
+            existingProduct.description = description || existingProduct.description;
+            const updatedProduct = await existingProduct.save();
             res.status(200).send({
                 statusCode: 200,
-                message: "Product updated successfully..!",
-                updatedData: updateProduct
+                message: 'Product has been successfully updated',
+                data: updatedProduct
             })
+
+            if (updatedProduct) {
+                res.status(200).send({
+                    statusCode: 200,
+                    message: "Product updated successfully..!",
+                    updatedData: updateProduct
+                })
+            } else {
+                res.status(204).send({
+                    statusCode: 204,
+                    message: "No product updated ..!"
+                })
+            }
         }
     } catch (error) {
         console.log("Error in updating the product");
