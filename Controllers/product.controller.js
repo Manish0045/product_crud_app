@@ -2,6 +2,7 @@ const Product = require("../Models/product.model");
 const Category = require("../Models/category.model");
 
 const createProduct = async (req, res) => {
+    let i = 1;
     const { name, categoryId, price, description } = req.body;
     if (!name || !categoryId || !price || !description) {
         return res.status(400).json({ msg: "Missing fields" });
@@ -13,20 +14,20 @@ const createProduct = async (req, res) => {
         }
         const existingProduct = await Product.findOne({ name });
         if (existingProduct) {
-            res.status(401).send({
+            return res.status(401).json({
                 statusCode: 401,
                 message: "Product already exists"
             })
         }
-        const product = await Product.create({ name, categoryId, price, description, slug: name.split(' ').join("-") });
+        const product = await Product.create({ name, categoryId, price, description, slug: existingProduct.slug ? name.split(' ').join("-") + "-" + (i + 1) : name.split(' ').join("-") + i + 1 });
         if (product) {
-            res.status(200).send({ statusCode: 201, message: "Product created", productId: product._id });
+            return res.status(200).json({ statusCode: 201, message: "Product created", productId: product._id });
         } else {
-            res.status(404).send({ statusCode: 409, message: "Something went wrong while creating product" })
+            return res.status(404).json({ statusCode: 409, message: "Something went wrong while creating product" })
         }
     } catch (error) {
         console.log(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
 
@@ -36,19 +37,19 @@ const getAllProducts = async (req, res) => {
         const products = await Product.find({});
         console.log(products);
         if (products) {
-            res.status(200).send({
+            return res.status(200).json({
                 statusCode: 200,
                 message: "Successfully fetched all products",
                 data: products
             })
         } else {
-            res.status(200).send({
+            return res.status(200).json({
                 statusCode: 200,
                 message: "No products found in database",
             })
         }
     } catch (error) {
-        res.status(500).send({
+        return res.status(500).json({
             statusCode: 500,
             message: "Couldn't fetch all products"
         })
@@ -64,14 +65,14 @@ const getProductByHandle = async (req, res) => {
         if (!product) {
             return res.status(404).json({ message: "The specified resource could not be found" });
         }
-        res.status(200).send({
+        res.status(200).json({
             statusCode: 200,
             message: "Product fetched...",
             data: product
         });
     } catch (error) {
         console.log(error);
-        res.status(500).send({
+        return res.status(500).json({
             statusCode: 500,
             message: "Something went wrong while fetching"
         })
@@ -85,7 +86,7 @@ const updateProduct = async (req, res) => {
         console.log(productId);
         const existingProduct = await Product.findById(productId);
         if (!existingProduct) {
-            res.status(404).send({
+            return res.status(404).json({
                 statusCode: 404,
                 message: "No product found with provided id"
             })
@@ -96,20 +97,14 @@ const updateProduct = async (req, res) => {
             existingProduct.price = price || existingProduct.price;
             existingProduct.description = description || existingProduct.description;
             const updatedProduct = await existingProduct.save();
-            res.status(200).send({
-                statusCode: 200,
-                message: 'Product has been successfully updated',
-                data: updatedProduct
-            })
-
             if (updatedProduct) {
-                res.status(200).send({
+                return res.status(200).json({
                     statusCode: 200,
                     message: "Product updated successfully..!",
                     updatedData: updateProduct
                 })
             } else {
-                res.status(204).send({
+                return res.status(204).json({
                     statusCode: 204,
                     message: "No product updated ..!"
                 })
@@ -117,33 +112,36 @@ const updateProduct = async (req, res) => {
         }
     } catch (error) {
         console.log("Error in updating the product");
-        res.status(500).send({
+        return res.status(500).json({
             statusCode: 500,
             message: "Something went wrong updating the product."
         })
     }
 }
+
 const deleteProduct = async (req, res) => {
-    const { id } = req.params;
+    const id = req.params.productId;
     try {
-        let deletedProduct = await Products.findByIdAndDelete(id);
+        let deletedProduct = await Product.findByIdAndDelete({ _id: id });
         if (!deletedProduct) {
-            res.status(404).send({
+            return res.status(404).json({
                 statusCode: 404,
                 message: "The specified resource could not be found."
             })
         } else {
-            res.status(200).send({
+            return res.status(200).json({
                 statusCode: 200,
-                message: "Product deleted successfully."
+                message: "Product deleted successfully.",
+                deletedId: deleteProduct._id
             })
         }
     } catch (error) {
-        consolelog("Error while deleting product", error);
-        res.status(500).send({
+        console.log("Error while deleting product", error);
+        return res.status(500).json({
             statusCode: 500,
             message: "Something went wrong deleting the product"
         })
     }
 }
+
 module.exports = { createProduct, getAllProducts, getProductByHandle, updateProduct, deleteProduct }

@@ -7,19 +7,19 @@ const getAllCategory = async (_, res) => {
         const categories = await Category.find({});
         console.log(categories);
         if (categories) {
-            res.status(200).send({
+            res.status(200).json({
                 statusCode: 200,
                 message: "Successfully fetched all categories",
                 data: categories
             })
         } else {
-            res.status(200).send({
+            res.status(200).json({
                 statusCode: 200,
                 message: "No Categories found in database",
             })
         }
     } catch (error) {
-        res.status(500).send({
+        res.status(500).json({
             statusCode: 500,
             message: "Couldn't fetch all categories"
         })
@@ -35,20 +35,20 @@ const createCategory = async (req, res) => {
         if (!product) {
             const category = await Category.create({ name: name, description: description });
             if (category) {
-                res.status(201).send({
+                res.status(201).json({
                     statusCode: 201,
                     message: "Category added successfully",
                     id: category._id
                 })
             }
-            // res.status(404).send({
+            // res.status(404).json({
             //     statusCode: 404,
             //     message: 'Product not Found!'
             // });
         } else {
             const category = await Category.create({ name: name, descripion: descripion, productId: productId })
             if (category) {
-                res.status(201).send({
+                res.status(201).json({
                     statusCode: 201,
                     message: "Category added successfully",
                     id: category._id
@@ -57,7 +57,7 @@ const createCategory = async (req, res) => {
         }
 
     } catch (error) {
-        res.status(500).send({
+        res.status(500).json({
             statusCode: 500,
             message: "Error while creating category",
             error: error.message
