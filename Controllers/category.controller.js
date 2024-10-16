@@ -2,10 +2,10 @@ const Category = require("../Models/category.model");
 const Product = require("../Models/product.model");
 
 const getAllCategory = async (_, res) => {
-    console.log("Getting all categories");
+    // console.log("Getting all categories");
     try {
         const categories = await Category.find({});
-        console.log("Categories found:", categories);
+        // console.log("Categories found:", categories);
         if (categories.length > 0) {
             return res.status(200).json({
                 statusCode: 200,
@@ -19,7 +19,7 @@ const getAllCategory = async (_, res) => {
             });
         }
     } catch (error) {
-        console.error("Error fetching categories:", error);
+        // console.error("Error fetching categories:", error);
         return res.status(500).json({
             statusCode: 500,
             message: "Couldn't fetch all categories",
@@ -31,7 +31,7 @@ const getAllCategory = async (_, res) => {
 
 const createCategory = async (req, res) => {
     try {
-        console.log("Creating Category");
+        // console.log("Creating Category");
         const { name, description, productId } = req.body;
         if (!(name || description)) return res.status(400).json({ message: "Please provide category name and description." });
         let product = await Product.findById(productId);

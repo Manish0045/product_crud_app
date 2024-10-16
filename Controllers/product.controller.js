@@ -32,10 +32,10 @@ const createProduct = async (req, res) => {
 }
 
 const getAllProducts = async (req, res) => {
-    console.log("Getting all products");
+    // console.log("Getting all products");
     try {
         const products = await Product.find({});
-        console.log(products);
+        // console.log(products);
         if (products) {
             return res.status(200).json({
                 statusCode: 200,
@@ -58,7 +58,7 @@ const getAllProducts = async (req, res) => {
 
 const getProductByHandle = async (req, res) => {
     const id = req.params.getByHandle;
-    console.log(id);
+    // console.log(id);
     try {
         const product = await Product.findById(id);
         console.log(product);
@@ -83,7 +83,7 @@ const updateProduct = async (req, res) => {
     try {
         const { name, price, description } = req.body;
         const productId = req.params.productId;
-        console.log(productId);
+        // console.log(productId);
         const existingProduct = await Product.findById(productId);
         if (!existingProduct) {
             return res.status(404).json({

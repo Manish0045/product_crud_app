@@ -23,7 +23,7 @@ app.use('/', (req, res) => {
 });
 
 
-app.use((err, req, res, next) => {
+app.use((err, _, res, next) => {
     if (err) {
         console.log(err.stack);
         if (err.name === 'ValidationError') {
