@@ -5,26 +5,29 @@ const getAllCategory = async (_, res) => {
     console.log("Getting all categories");
     try {
         const categories = await Category.find({});
-        console.log(categories);
-        if (categories) {
-            res.status(200).json({
+        console.log("Categories found:", categories);
+        if (categories.length > 0) {
+            return res.status(200).json({
                 statusCode: 200,
                 message: "Successfully fetched all categories",
                 data: categories
-            })
+            });
         } else {
-            res.status(200).json({
+            return res.status(200).json({
                 statusCode: 200,
                 message: "No Categories found in database",
-            })
+            });
         }
     } catch (error) {
-        res.status(500).json({
+        console.error("Error fetching categories:", error);
+        return res.status(500).json({
             statusCode: 500,
-            message: "Couldn't fetch all categories"
-        })
+            message: "Couldn't fetch all categories",
+            error: error.message
+        });
     }
-}
+};
+
 
 const createCategory = async (req, res) => {
     try {
