@@ -24,3 +24,21 @@ example -
   price: < Your Product Price >,
   description: < Your Products Description >
 }
+
+
+## Category Request routes
+# /category
+- /all
+- /add
+
+# category request example
+```sh
+https://product-crud-app-3f7k.onrender.com/category/all
+```
+- Gives all categories details
+
+#### The body to request 
+{
+  name: < Your Product name >,
+  description: < Your Products Description >
+}
